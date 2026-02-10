@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CodeCam - Shader Effects</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <div id="credit" class="credit hidden">by @tiny.kiri</div>
+    
+    <div class="dual-view">
+      <div class="video-container">
+        <div class="view-label">Original</div>
+        <video id="webcam" autoplay playsinline></video>
+      </div>
+      
+      <div class="canvas-container">
+        <div class="view-label">Live Effect</div>
+        <canvas id="shader-canvas"></canvas>
+      </div>
+    </div>
+    
+    <div id="loading-state" class="loading-state">
+      <div class="loading-content">
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="prompt-text">requesting camera.access()</span>
+          <span class="cursor-blink">_</span>
+        </div>
+        <button id="start-camera" class="start-btn">
+          <span class="btn-icon">▶</span>
+          Initialize Camera
+        </button>
+      </div>
+    </div>
+    
+    <div class="control-bar">
+      <div class="control-bar-inner">
+        <div class="style-switcher">
+          <button class="style-btn active" data-style="binary">
+            <span class="style-icon">01</span>
+            <span class="style-name">Binary</span>
+            <span class="style-subtitle">The Kernel</span>
+          </button>
+          <button class="style-btn" data-style="regex">
+            <span class="style-icon">/./</span>
+            <span class="style-name">Regex</span>
+            <span class="style-subtitle">The Parser</span>
+          </button>
+          <button class="style-btn" data-style="source">
+            <span class="style-icon">{}</span>
+            <span class="style-name">Source</span>
+            <span class="style-subtitle">The Script</span>
+          </button>
+        </div>
+        
+        <div class="timer-selector">
+          <span class="timer-label">Timer</span>
+          <div class="timer-options">
+            <button class="timer-btn active" data-timer="0">Off</button>
+            <button class="timer-btn" data-timer="3">3s</button>
+            <button class="timer-btn" data-timer="5">5s</button>
+            <button class="timer-btn" data-timer="10">10s</button>
+          </div>
+        </div>
+        
+        <button id="capture-btn" class="capture-btn">
+          <span class="capture-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="4"/>
+            </svg>
+          </span>
+          <span class="capture-text">Capture</span>
+        </button>
+      </div>
+    </div>
+    
+    <div id="countdown" class="countdown-overlay hidden">
+      <div class="countdown-number"></div>
+    </div>
+    
+    <div id="flash" class="flash"></div>
+    
+    <a id="download-link" style="display: none;"></a>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

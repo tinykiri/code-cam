@@ -395,6 +395,11 @@ body {
   }
 }
 
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .capture-btn {
   font-family: inherit;
   display: flex;
@@ -422,6 +427,50 @@ body {
 }
 
 .capture-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.record-btn {
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-elevated));
+  border: 1px solid var(--accent-orange);
+  border-radius: var(--border-radius);
+  color: var(--accent-orange);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(253, 151, 31, 0.15);
+}
+
+.record-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 10px rgba(253, 151, 31, 0.5), 0 0 20px rgba(253, 151, 31, 0.3);
+}
+
+.record-btn:active {
+  transform: translateY(0);
+}
+
+.record-btn.recording {
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  border-color: #e74c3c;
+  color: white;
+  animation: recording-pulse 1.5s ease-in-out infinite;
+  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+}
+
+@keyframes recording-pulse {
+  0%, 100% { box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4); }
+  50% { box-shadow: 0 4px 25px rgba(231, 76, 60, 0.7); }
+}
+
+.record-icon svg {
   width: 20px;
   height: 20px;
 }
@@ -488,8 +537,13 @@ body {
     gap: 1rem;
   }
   
-  .capture-btn {
+  .action-buttons {
     width: 100%;
+  }
+
+  .capture-btn,
+  .record-btn {
+    flex: 1;
     justify-content: center;
   }
   

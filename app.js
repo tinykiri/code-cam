@@ -20,8 +20,13 @@ class CodeCam {
     this.timerDelay = 0;
     this.isCountingDown = false;
 
-    this.charWidth = 7;
-    this.charHeight = 10;
+    this.isRecording = false;
+    this.mediaRecorder = null;
+    this.recordedChunks = [];
+    this.recordBtn = document.getElementById('record-btn');
+
+    this.charWidth = 5;
+    this.charHeight = 7;
 
     this.tempCanvas = document.createElement('canvas');
     this.tempCtx = this.tempCanvas.getContext('2d', { willReadFrequently: true });
@@ -85,6 +90,7 @@ class CodeCam {
   init() {
     this.startBtn.addEventListener('click', () => this.startCamera());
     this.captureBtn.addEventListener('click', () => this.handleCapture());
+    this.recordBtn.addEventListener('click', () => this.toggleRecording());
 
     this.styleBtns.forEach(btn => {
       btn.addEventListener('click', () => this.switchStyle(btn.dataset.style));
@@ -302,6 +308,69 @@ class CodeCam {
         }
       }
     }
+  }
+
+  toggleRecording() {
+    if (this.isRecording) {
+      this.stopRecording();
+    } else {
+      this.startRecording();
+    }
+  }
+
+  startRecording() {
+    const stream = this.canvas.captureStream(30);
+    this.mediaRecorder = new MediaRecorder(stream, {
+      mimeType: this.getSupportedMimeType(),
+      videoBitsPerSecond: 5000000
+    });
+
+    this.recordedChunks = [];
+
+    this.mediaRecorder.ondataavailable = (e) => {
+      if (e.data.size > 0) {
+        this.recordedChunks.push(e.data);
+      }
+    };
+
+    this.mediaRecorder.onstop = () => {
+      const mimeType = this.mediaRecorder.mimeType;
+      const ext = mimeType.includes('webm') ? 'webm' : 'mp4';
+      const blob = new Blob(this.recordedChunks, { type: mimeType });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.getElementById('download-link');
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      link.download = `codecam-${this.currentStyle}-${timestamp}.${ext}`;
+      link.href = url;
+      link.click();
+
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    };
+
+    this.mediaRecorder.start();
+    this.isRecording = true;
+    this.recordBtn.classList.add('recording');
+    this.recordBtn.querySelector('.record-text').textContent = 'Stop';
+  }
+
+  stopRecording() {
+    if (this.mediaRecorder && this.mediaRecorder.state !== 'inactive') {
+      this.mediaRecorder.stop();
+    }
+    this.isRecording = false;
+    this.recordBtn.classList.remove('recording');
+    this.recordBtn.querySelector('.record-text').textContent = 'Record';
+  }
+
+  getSupportedMimeType() {
+    const types = [
+      'video/webm;codecs=vp9',
+      'video/webm;codecs=vp8',
+      'video/webm',
+      'video/mp4'
+    ];
+    return types.find(t => MediaRecorder.isTypeSupported(t)) || 'video/webm';
   }
 
   hexToRgba(hex, alpha) {
